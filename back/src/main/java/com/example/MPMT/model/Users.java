@@ -60,13 +60,4 @@ public class Users {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    @Override
-    public String toString() {
-        return "Users{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }

@@ -31,6 +31,13 @@ public class UsersController {
         return usersService.getUsersById(id);
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Users> getUserByMail(@PathVariable String email) {
+        Optional<Users> user = usersService.getUserByMail(email);
+        return user.map(ResponseEntity::ok)
+                   .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<Users> createUser(@RequestBody Users user) {
         Users savedUser = usersService.saveUser(user);
