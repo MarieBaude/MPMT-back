@@ -1,5 +1,8 @@
 package com.example.MPMT.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +15,7 @@ public class ProjectRole {
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
+    @JsonIgnore
     private Projects project;
 
     @ManyToOne
@@ -20,19 +24,26 @@ public class ProjectRole {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoleType role;
+    private Role role;
 
     // Enum pour les rôles
-    public enum RoleType {
+    public enum Role {
         ADMIN,
         MEMBER,
         OBSERVER
     }
 
+     // Propriétés calculées pour le JSON
+    @JsonProperty("role")
+    public String getRoleName() {
+        return role.name();
+    }
+
+
     // Constructeurs
     public ProjectRole() {}
 
-    public ProjectRole(Projects project, Users user, RoleType role) {
+    public ProjectRole(Projects project, Users user, Role role) {
         this.project = project;
         this.user = user;
         this.role = role;
@@ -48,6 +59,6 @@ public class ProjectRole {
     public Users getUser() { return user; }
     public void setUser(Users user) { this.user = user; }
 
-    public RoleType getRole() { return role; }
-    public void setRole(RoleType role) { this.role = role; }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 }

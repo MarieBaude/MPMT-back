@@ -1,6 +1,8 @@
 package com.example.MPMT.model;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,8 +20,8 @@ public class Projects {
     private Users createdBy;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProjectRole> projectRoles;
-
+    private List<ProjectRole> projectRoles = new ArrayList<>();    
+    
     // Constructeurs
     public Projects() {}
 

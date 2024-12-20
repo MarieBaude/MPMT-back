@@ -1,13 +1,15 @@
 package com.example.MPMT.controller;
 
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.MPMT.model.Projects;
+
 import com.example.MPMT.dto.ProjectCreationDTO;
 import com.example.MPMT.dto.AssignRoleDTO;
 import com.example.MPMT.service.ProjectsService;
-
 
 @RestController
 @RequestMapping("/api/projects")
@@ -23,6 +25,11 @@ public class ProjectsController {
     public ResponseEntity<Projects> createProject(@RequestBody ProjectCreationDTO dto) {
         Projects project = projectService.createProject(dto);
         return ResponseEntity.ok(project);
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Projects> projectService(@PathVariable Long id) {
+        return projectService.getProjectsById(id);
     }
 
     @PostMapping("/assign-role")

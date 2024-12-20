@@ -11,4 +11,3 @@ public class ProjectCreationDTO {
     public Long getCreatedById() { return createdById; }
     public void setCreatedById(Long createdById) { this.createdById = createdById; }
 }
-
