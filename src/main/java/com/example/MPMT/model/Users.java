@@ -2,6 +2,8 @@ package com.example.MPMT.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class Users {
@@ -17,6 +19,9 @@ public class Users {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProjectRole> projectRoles;    
 
     public Users() {
     }
