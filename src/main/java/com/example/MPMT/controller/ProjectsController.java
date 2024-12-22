@@ -1,6 +1,7 @@
 package com.example.MPMT.controller;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +37,11 @@ public class ProjectsController {
     public ResponseEntity<String> assignRole(@RequestBody AssignRoleDTO dto) {
         projectService.assignRole(dto);
         return ResponseEntity.ok("Rôle assigné avec succès");
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Projects>> getProjectsByUserId(@PathVariable Long userId) {
+        List<Projects> projects = projectService.getProjectsByUserId(userId);
+        return ResponseEntity.ok(projects);
     }
 }

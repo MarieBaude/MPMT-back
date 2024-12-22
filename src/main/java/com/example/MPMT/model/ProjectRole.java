@@ -39,7 +39,6 @@ public class ProjectRole {
         return role.name();
     }
 
-
     // Constructeurs
     public ProjectRole() {}
 

@@ -1,6 +1,7 @@
 package com.example.MPMT.service;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import com.example.MPMT.repository.UsersRepository;
@@ -59,4 +60,13 @@ public class ProjectsService {
         ProjectRole projectRole = new ProjectRole(project, user, roleType);
         projectRoleRepository.save(projectRole);
     }
+
+    // Obtenir tous les projets d'un utilisateur
+    public List<Projects> getProjectsByUserId(Long userId) {
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        return projectsRepository.findByCreatedByOrProjectRoles_User(user, user);
+    }
+
 }
