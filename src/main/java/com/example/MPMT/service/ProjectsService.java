@@ -9,6 +9,7 @@ import com.example.MPMT.model.Users;
 import com.example.MPMT.repository.ProjectsRepository;
 import com.example.MPMT.model.Projects;
 import com.example.MPMT.model.ProjectRole;
+import com.example.MPMT.model.ProjectRole.Role;
 import com.example.MPMT.repository.ProjectRoleRepository;
 import com.example.MPMT.dto.ProjectCreationDTO;
 import com.example.MPMT.dto.AssignRoleDTO;
@@ -67,6 +68,41 @@ public class ProjectsService {
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
         return projectsRepository.findByCreatedByOrProjectRoles_User(user, user);
+    }
+
+    // Inviter un utilisateur à un projet
+    public void addUserToProject(Projects project, Users user, String role) {
+        // Vérifier si le rôle est valide
+        Role validatedRole = Role.valueOf(role.toUpperCase());
+
+        // Vérifier si l'utilisateur est déjà membre du projet
+        if (projectRoleRepository.existsByProjectAndUser(project, user)) {
+            throw new IllegalArgumentException("Cet utilisateur est déjà membre du projet.");
+        }
+
+        // Créer et enregistrer le rôle
+        ProjectRole projectRole = new ProjectRole();
+        projectRole.setProject(project);
+        projectRole.setUser(user);
+        projectRole.setRole(validatedRole);
+
+        projectRoleRepository.save(projectRole);
+    }
+
+    // Vérifier si l'utilisateur est un admin
+    public void verifyAdminRole(Long projectId, Long userId) {
+        List<ProjectRole> roles = projectRoleRepository.findByProjectIdAndUserId(projectId, userId);
+        if (roles.isEmpty()) {
+            throw new IllegalArgumentException("Accès refusé, vous n'êtes pas ADMIN");
+
+        }
+
+        boolean isAdmin = roles.stream()
+                .anyMatch(projectRole -> projectRole.getRole() == Role.ADMIN);
+
+        if (!isAdmin) {
+            throw new IllegalArgumentException("Accès refusé, vous n'êtes pas ADMIN");
+        }
     }
 
 }

@@ -27,7 +27,7 @@ public class ProjectRole {
     private Role role;
 
     // Enum pour les rôles
-    public enum Role {
+    public static enum Role {
         ADMIN,
         MEMBER,
         OBSERVER
