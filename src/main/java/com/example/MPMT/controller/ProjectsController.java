@@ -50,21 +50,10 @@ public class ProjectsController {
     }
 
     // Récupérer tous les projets d'un utilisateur
-    @RestController
-    @RequestMapping("/api/projects")
-    public class ProjectController {
-
-        private final ProjectsService projectService;
-
-        public ProjectController(ProjectsService projectService) {
-            this.projectService = projectService;
-        }
-
-        @GetMapping("/user/{userId}")
-        public ResponseEntity<List<GetAllProjectsFromUserDTO>> getProjectsByUserId(@PathVariable Long userId) {
-            List<GetAllProjectsFromUserDTO> projects = projectService.getProjectsByUserId(userId);
-            return ResponseEntity.ok(projects);
-        }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<GetAllProjectsFromUserDTO>> getProjectsByUserId(@PathVariable Long userId) {
+        List<GetAllProjectsFromUserDTO> projects = projectService.getProjectsByUserId(userId);
+        return ResponseEntity.ok(projects);
     }
 
     // Inviter un utilisateur à un projet
