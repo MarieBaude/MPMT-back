@@ -17,6 +17,7 @@ import com.example.MPMT.service.ProjectsService;
 import com.example.MPMT.service.UsersService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/projects")
 public class ProjectsController {
 
