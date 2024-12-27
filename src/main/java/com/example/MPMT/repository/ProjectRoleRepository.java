@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProjectRoleRepository extends JpaRepository<ProjectRole, Long>{
     List<ProjectRole> findByProjectIdAndUserId(Long projectId, Long userId);
     boolean existsByProjectAndUser(Projects project, Users user);
+    ProjectRole findByProjectAndUser(Projects project, Users user);
 }

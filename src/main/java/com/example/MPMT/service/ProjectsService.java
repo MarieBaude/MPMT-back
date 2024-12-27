@@ -60,8 +60,15 @@ public class ProjectsService {
 
         ProjectRole.Role roleType = ProjectRole.Role.valueOf(dto.getRole().toUpperCase());
 
-        ProjectRole projectRole = new ProjectRole(project, user, roleType);
-        projectRoleRepository.save(projectRole);
+        ProjectRole existingRole = projectRoleRepository.findByProjectAndUser(project, user);
+        if (existingRole != null) {
+            // Si l'utilisateur est déjà assigné, on met à jour son rôle
+            existingRole.setRole(roleType);
+            projectRoleRepository.save(existingRole);
+        } else {
+            ProjectRole projectRole = new ProjectRole(project, user, roleType);
+            projectRoleRepository.save(projectRole);
+        }
     }
 
     // Obtenir tous les projets d'un utilisateur
@@ -77,6 +84,7 @@ public class ProjectsService {
                 .collect(Collectors.toList());
     }
 
+    // Convertir un projet en DTO
     private GetAllProjectsFromUserDTO convertToDto(Projects project) {
         GetAllProjectsFromUserDTO dto = new GetAllProjectsFromUserDTO();
         dto.setId(project.getId());
@@ -86,7 +94,7 @@ public class ProjectsService {
                 .map(role -> {
                     GetAllProjectsFromUserDTO.ProjectRole roleDto = new GetAllProjectsFromUserDTO.ProjectRole();
                     roleDto.setUsername(role.getUser().getUsername());
-                    roleDto.setRole(role.getRole().name()); // Conversion explicite de l'énumération en String
+                    roleDto.setRole(role.getRole().name());
                     return roleDto;
                 })
                 .collect(Collectors.toList()));
