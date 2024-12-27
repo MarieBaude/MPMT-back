@@ -11,6 +11,7 @@ import com.example.MPMT.model.Projects;
 import com.example.MPMT.model.Users;
 import com.example.MPMT.dto.ProjectCreationDTO;
 import com.example.MPMT.dto.AssignRoleDTO;
+import com.example.MPMT.dto.GetAllProjectsFromUserDTO;
 import com.example.MPMT.dto.InviteMemberDTO;
 import com.example.MPMT.service.ProjectsService;
 import com.example.MPMT.service.UsersService;
@@ -27,29 +28,45 @@ public class ProjectsController {
         this.userService = userService;
     }
 
+    // Créer un projet
     @PostMapping("/create")
     public ResponseEntity<Projects> createProject(@RequestBody ProjectCreationDTO dto) {
         Projects project = projectService.createProject(dto);
         return ResponseEntity.ok(project);
     }
 
+    // Récupérer un projet par son id
     @GetMapping("/{id}")
     public Optional<Projects> projectService(@PathVariable Long id) {
         return projectService.getProjectsById(id);
     }
 
+    // Assigner un rôle à un utilisateur dans un projet
     @PostMapping("/assign-role")
     public ResponseEntity<String> assignRole(@RequestBody AssignRoleDTO dto) {
         projectService.assignRole(dto);
         return ResponseEntity.ok("Rôle assigné avec succès");
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Projects>> getProjectsByUserId(@PathVariable Long userId) {
-        List<Projects> projects = projectService.getProjectsByUserId(userId);
-        return ResponseEntity.ok(projects);
+    // Récupérer tous les projets d'un utilisateur
+    @RestController
+    @RequestMapping("/api/projects")
+    public class ProjectController {
+
+        private final ProjectsService projectService;
+
+        public ProjectController(ProjectsService projectService) {
+            this.projectService = projectService;
+        }
+
+        @GetMapping("/user/{userId}")
+        public ResponseEntity<List<GetAllProjectsFromUserDTO>> getProjectsByUserId(@PathVariable Long userId) {
+            List<GetAllProjectsFromUserDTO> projects = projectService.getProjectsByUserId(userId);
+            return ResponseEntity.ok(projects);
+        }
     }
 
+    // Inviter un utilisateur à un projet
     @PostMapping("/{projectId}/invite")
     public ResponseEntity<?> inviteMemberToProject(
             @PathVariable Long projectId,
@@ -72,5 +89,5 @@ public class ProjectsController {
 
         return ResponseEntity.ok("Utilisateur invité avec succès.");
     }
- 
+
 }

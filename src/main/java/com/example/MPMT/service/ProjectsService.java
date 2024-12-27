@@ -1,6 +1,7 @@
 package com.example.MPMT.service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import com.example.MPMT.model.ProjectRole.Role;
 import com.example.MPMT.repository.ProjectRoleRepository;
 import com.example.MPMT.dto.ProjectCreationDTO;
 import com.example.MPMT.dto.AssignRoleDTO;
+import com.example.MPMT.dto.GetAllProjectsFromUserDTO;
 
 @Service
 public class ProjectsService {
@@ -63,11 +65,32 @@ public class ProjectsService {
     }
 
     // Obtenir tous les projets d'un utilisateur
-    public List<Projects> getProjectsByUserId(Long userId) {
+    public List<GetAllProjectsFromUserDTO> getProjectsByUserId(Long userId) {
         Users user = usersRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        return projectsRepository.findByCreatedByOrProjectRoles_User(user, user);
+        List<Projects> projects = projectsRepository.findByCreatedByOrProjectRoles_User(user, user);
+
+        // Convertir chaque projet en DTO
+        return projects.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private GetAllProjectsFromUserDTO convertToDto(Projects project) {
+        GetAllProjectsFromUserDTO dto = new GetAllProjectsFromUserDTO();
+        dto.setId(project.getId());
+        dto.setName(project.getName());
+        dto.setCreatedById(project.getCreatedBy().getId());
+        dto.setProjectRoles(project.getProjectRoles().stream()
+                .map(role -> {
+                    GetAllProjectsFromUserDTO.ProjectRole roleDto = new GetAllProjectsFromUserDTO.ProjectRole();
+                    roleDto.setUsername(role.getUser().getUsername());
+                    roleDto.setRole(role.getRole().name()); // Conversion explicite de l'énumération en String
+                    return roleDto;
+                })
+                .collect(Collectors.toList()));
+        return dto;
     }
 
     // Inviter un utilisateur à un projet
