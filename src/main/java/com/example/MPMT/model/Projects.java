@@ -15,6 +15,9 @@ public class Projects {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = true)
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private Users createdBy;
@@ -23,11 +26,10 @@ public class Projects {
     private List<ProjectRole> projectRoles = new ArrayList<>();    
     
     // Constructeurs
-    public Projects() {}
-
-    public Projects(String name, Users createdBy) {
+    public Projects(String name, Users createdBy, String description) {
         this.name = name;
         this.createdBy = createdBy;
+        this.description = description;
     }
 
     // Getters et Setters
@@ -45,6 +47,14 @@ public class Projects {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Users getCreatedBy() {

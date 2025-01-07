@@ -35,7 +35,7 @@ public class ProjectsService {
         Users user = usersRepository.findById(dto.getCreatedById())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        Projects project = new Projects(dto.getName(), user);
+        Projects project = new Projects(dto.getName(), user, dto.getDescription());
         Projects savedProject = projectsRepository.save(project);
 
         // Ajouter l'utilisateur en tant qu'ADMIN par défaut
