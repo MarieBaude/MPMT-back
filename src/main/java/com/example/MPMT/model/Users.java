@@ -23,8 +23,7 @@ public class Users {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProjectRole> projectRoles;    
 
-    public Users() {
-    }
+    public Users() {}
 
     public Users(Long id, String username, String password, String email) {
         this.id = id;

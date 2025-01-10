@@ -2,8 +2,11 @@ package com.example.MPMT.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "projects")
@@ -18,6 +21,10 @@ public class Projects {
     @Column(nullable = true)
     private String description;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private Users createdBy;
@@ -26,10 +33,13 @@ public class Projects {
     private List<ProjectRole> projectRoles = new ArrayList<>();    
     
     // Constructeurs
-    public Projects(String name, Users createdBy, String description) {
+    public Projects() {}
+
+    public Projects(String name, Users createdBy, String description, LocalDateTime createdAt) {
         this.name = name;
         this.createdBy = createdBy;
         this.description = description;
+        this.createdAt = createdAt;
     }
 
     // Getters et Setters
@@ -55,6 +65,14 @@ public class Projects {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Users getCreatedBy() {

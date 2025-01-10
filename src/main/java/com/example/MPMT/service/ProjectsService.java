@@ -35,7 +35,7 @@ public class ProjectsService {
         Users user = usersRepository.findById(dto.getCreatedById())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        Projects project = new Projects(dto.getName(), user, dto.getDescription());
+        Projects project = new Projects(dto.getName(), user, dto.getDescription(), dto.getCreatedAt());
         Projects savedProject = projectsRepository.save(project);
 
         // Ajouter l'utilisateur en tant qu'ADMIN par défaut
@@ -84,12 +84,13 @@ public class ProjectsService {
                 .collect(Collectors.toList());
     }
 
-    // Convertir un projet en DTO
+    // 
     private GetAllProjectsFromUserDTO convertToDto(Projects project) {
         GetAllProjectsFromUserDTO dto = new GetAllProjectsFromUserDTO();
         dto.setId(project.getId());
         dto.setName(project.getName());
         dto.setCreatedById(project.getCreatedBy().getId());
+        dto.setCreatedAt(project.getCreatedAt());
         dto.setProjectRoles(project.getProjectRoles().stream()
                 .map(role -> {
                     GetAllProjectsFromUserDTO.ProjectRole roleDto = new GetAllProjectsFromUserDTO.ProjectRole();
