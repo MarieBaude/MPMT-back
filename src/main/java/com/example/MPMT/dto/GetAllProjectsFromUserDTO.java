@@ -8,15 +8,6 @@ public class GetAllProjectsFromUserDTO {
     private Long createdById;
     private LocalDateTime createdAt;
     private List<ProjectRole> projectRoles;
-
-    public GetAllProjectsFromUserDTO() {}
-
-    public GetAllProjectsFromUserDTO(Long id, String name, Long createdById, LocalDateTime createdAt) {
-        this.id = id;
-        this.name = name;
-        this.createdById = createdById;
-        this.createdAt = createdAt;
-    }
     
     public static class ProjectRole {
         private String username;
