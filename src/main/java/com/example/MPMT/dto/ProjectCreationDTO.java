@@ -8,6 +8,13 @@ public class ProjectCreationDTO {
     private String description;
     private LocalDateTime createdAt;
 
+    public ProjectCreationDTO(String name, String description, LocalDateTime createdAt, Long createdById) {
+        this.name = name;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.createdById = createdById;
+    }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

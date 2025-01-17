@@ -5,6 +5,12 @@ public class AssignRoleDTO {
     private Long userId;
     private String role;
 
+    public AssignRoleDTO(Long projectId, Long userId, String role) {
+        this.projectId = projectId;
+        this.userId = userId;
+        this.role = role;
+    }
+
     // Getters et Setters
     public Long getProjectId() { return projectId; }
     public void setProjectId(Long projectId) { this.projectId = projectId; }
