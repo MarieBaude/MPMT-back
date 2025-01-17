@@ -42,13 +42,23 @@ public class ProjectsController {
         return projectService.getProjectsById(id);
     }
 
-    // Assigner un rôle à un utilisateur dans un projet
-    @PostMapping("/assign-role")
-    public ResponseEntity<String> assignRole(@RequestBody AssignRoleDTO dto) {
+    // Changer le rôle d'utilisateur dans un projet
+    @PatchMapping("/{projectId}/change-role")
+    public ResponseEntity<String> changeUserRole(
+            @PathVariable Long projectId, 
+            @RequestBody AssignRoleDTO dto,
+            @RequestParam Long currentUserId) {
+    
+        // Vérifier si l'utilisateur a le rôle d'admin dans le projet
+        projectService.verifyAdminRole(projectId, currentUserId);
+    
+        // Assigner le rôle à l'utilisateur
+        dto.setProjectId(projectId); // S'assurer que l'ID du projet est bien dans le DTO
         projectService.assignRole(dto);
-        return ResponseEntity.ok("Rôle assigné avec succès");
-    }
-
+    
+        return ResponseEntity.ok("Rôle mis à jour avec succès.");
+    }    
+    
     // Récupérer tous les projets d'un utilisateur
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<GetAllProjectsFromUserDTO>> getProjectsByUserId(@PathVariable Long userId) {
