@@ -89,13 +89,13 @@ public class ProjectsService {
                 .collect(Collectors.toList());
     }
 
-    // 
     private GetAllProjectsFromUserDTO convertToDto(Projects project) {
         GetAllProjectsFromUserDTO dto = new GetAllProjectsFromUserDTO();
         dto.setId(project.getId());
         dto.setName(project.getName());
         dto.setCreatedById(project.getCreatedBy().getId());
         dto.setCreatedAt(project.getCreatedAt());
+        dto.setDescription(project.getDescription());
         dto.setProjectRoles(project.getProjectRoles().stream()
                 .map(role -> {
                     GetAllProjectsFromUserDTO.ProjectRole roleDto = new GetAllProjectsFromUserDTO.ProjectRole();

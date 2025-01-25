@@ -1,7 +1,9 @@
 package com.example.MPMT.controller;
 
 import java.util.Optional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.http.ResponseEntity;
@@ -44,21 +46,25 @@ public class ProjectsController {
 
     // Changer le rôle d'utilisateur dans un projet
     @PatchMapping("/{projectId}/change-role")
-    public ResponseEntity<String> changeUserRole(
-            @PathVariable Long projectId, 
+    public ResponseEntity<Map<String, String>> changeUserRole(
+            @PathVariable Long projectId,
             @RequestBody AssignRoleDTO dto,
             @RequestParam Long currentUserId) {
-    
+
         // Vérifier si l'utilisateur a le rôle d'admin dans le projet
         projectService.verifyAdminRole(projectId, currentUserId);
-    
+
         // Assigner le rôle à l'utilisateur
         dto.setProjectId(projectId); // S'assurer que l'ID du projet est bien dans le DTO
         projectService.assignRole(dto);
-    
-        return ResponseEntity.ok("Rôle mis à jour avec succès.");
-    }    
-    
+
+        // Créer une réponse JSON
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Rôle mis à jour avec succès.");
+
+        return ResponseEntity.ok(response);
+    }
+
     // Récupérer tous les projets d'un utilisateur
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<GetAllProjectsFromUserDTO>> getProjectsByUserId(@PathVariable Long userId) {
@@ -80,14 +86,14 @@ public class ProjectsController {
         Projects project = projectService.getProjectsById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Projet introuvable"));
 
-        // Vérifier si l'utilisateur à inviter existe
-        Users invitedUser = userService.getUsersById(request.getUserId())
+        // Vérifier si l'utilisateur à inviter existe en utilisant l'email
+        Users invitedUser = userService.getUserByMail(request.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
         // Ajouter l'utilisateur au projet avec le rôle spécifié
         projectService.addUserToProject(project, invitedUser, request.getRole());
 
-        return ResponseEntity.ok("Utilisateur invité avec succès.");
+        return ResponseEntity.ok(project);
     }
 
 }
