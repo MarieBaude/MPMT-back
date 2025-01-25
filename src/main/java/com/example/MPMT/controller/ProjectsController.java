@@ -58,7 +58,6 @@ public class ProjectsController {
         dto.setProjectId(projectId); // S'assurer que l'ID du projet est bien dans le DTO
         projectService.assignRole(dto);
 
-        // return ResponseEntity.ok("Rôle mis à jour avec succès.");
         // Créer une réponse JSON
         Map<String, String> response = new HashMap<>();
         response.put("message", "Rôle mis à jour avec succès.");
