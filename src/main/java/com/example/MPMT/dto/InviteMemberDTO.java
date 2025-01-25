@@ -1,23 +1,23 @@
 package com.example.MPMT.dto;
 
 public class InviteMemberDTO {
-    private Long userId;
+    private String email; 
     private String role;
 
     public InviteMemberDTO() {}
 
-    public InviteMemberDTO(Long userId, String role) {
-        this.userId = userId;
+    public InviteMemberDTO(String email, String role) {
+        this.email = email;
         this.role = role;
     }
 
     // Getters et setters
-    public Long getUserId() {
-        return userId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getRole() {

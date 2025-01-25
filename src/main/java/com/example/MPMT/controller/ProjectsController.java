@@ -74,26 +74,26 @@ public class ProjectsController {
 
     // Inviter un utilisateur à un projet
     @PostMapping("/{projectId}/invite")
-    public ResponseEntity<?> inviteMemberToProject(
-            @PathVariable Long projectId,
-            @RequestBody InviteMemberDTO request,
-            @RequestParam Long currentUserId) {
+public ResponseEntity<?> inviteMemberToProject(
+        @PathVariable Long projectId,
+        @RequestBody InviteMemberDTO request,
+        @RequestParam Long currentUserId) {
 
-        // Vérifier si l'utilisateur a le rôle d'admin dans le projet
-        projectService.verifyAdminRole(projectId, currentUserId);
+    // Vérifier si l'utilisateur a le rôle d'admin dans le projet
+    projectService.verifyAdminRole(projectId, currentUserId);
 
-        // Vérifier si le projet existe
-        Projects project = projectService.getProjectsById(projectId)
-                .orElseThrow(() -> new NoSuchElementException("Projet introuvable"));
+    // Vérifier si le projet existe
+    Projects project = projectService.getProjectsById(projectId)
+            .orElseThrow(() -> new NoSuchElementException("Projet introuvable"));
 
-        // Vérifier si l'utilisateur à inviter existe
-        Users invitedUser = userService.getUsersById(request.getUserId())
-                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+    // Vérifier si l'utilisateur à inviter existe en utilisant l'email
+    Users invitedUser = userService.getUserByMail(request.getEmail())
+            .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
-        // Ajouter l'utilisateur au projet avec le rôle spécifié
-        projectService.addUserToProject(project, invitedUser, request.getRole());
+    // Ajouter l'utilisateur au projet avec le rôle spécifié
+    projectService.addUserToProject(project, invitedUser, request.getRole());
 
-        return ResponseEntity.ok(project);
-    }
+    return ResponseEntity.ok(project);
+}
 
 }
