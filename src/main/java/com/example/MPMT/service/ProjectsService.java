@@ -30,6 +30,10 @@ public class ProjectsService {
         this.projectRoleRepository = projectRoleRepository;
     }
 
+    public List<Projects> findAll() {
+        return projectsRepository.findAll();
+    }
+
     // Création d'un projet
     public Projects createProject(ProjectCreationDTO dto) {
         Users user = usersRepository.findById(dto.getCreatedById())

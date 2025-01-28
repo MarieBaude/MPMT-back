@@ -31,6 +31,12 @@ public class ProjectsController {
         this.userService = userService;
     }
 
+    // Trouver tous les projets
+    @GetMapping
+    public List<Projects> getAllUsers() {
+        return projectService.findAll();
+    }
+
     // Créer un projet
     @PostMapping("/create")
     public ResponseEntity<Projects> createProject(@RequestBody ProjectCreationDTO dto) {
