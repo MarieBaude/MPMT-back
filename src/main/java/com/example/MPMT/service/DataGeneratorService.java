@@ -55,16 +55,6 @@ public class DataGeneratorService {
         }
 
         // Générer des projets
-        // List<Users> users = userRepository.findAll();
-        // for (int i = 0; i < 5; i++) {
-        // Projects project = new Projects();
-        // project.setName(faker.app().name());
-        // project.setDescription(faker.lorem().paragraph());
-        // project.setCreatedAt(LocalDateTime.now());
-        // project.setCreatedBy(users.get(faker.random().nextInt(users.size())));
-        // projectRepository.save(project);
-        // }
-
         List<Users> users = userRepository.findAll();
         for (int i = 0; i < 5; i++) {
             Projects project = new Projects();
