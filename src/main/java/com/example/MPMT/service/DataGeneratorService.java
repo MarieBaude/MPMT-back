@@ -22,6 +22,9 @@ public class DataGeneratorService {
     private ProjectsRepository projectRepository;
 
     @Autowired
+    private ProjectRoleRepository projectRoleRepository;
+
+    @Autowired
     private TaskRepository taskRepository;
 
     @Autowired
@@ -52,14 +55,33 @@ public class DataGeneratorService {
         }
 
         // Générer des projets
+        // List<Users> users = userRepository.findAll();
+        // for (int i = 0; i < 5; i++) {
+        // Projects project = new Projects();
+        // project.setName(faker.app().name());
+        // project.setDescription(faker.lorem().paragraph());
+        // project.setCreatedAt(LocalDateTime.now());
+        // project.setCreatedBy(users.get(faker.random().nextInt(users.size())));
+        // projectRepository.save(project);
+        // }
+
         List<Users> users = userRepository.findAll();
         for (int i = 0; i < 5; i++) {
             Projects project = new Projects();
             project.setName(faker.app().name());
             project.setDescription(faker.lorem().paragraph());
             project.setCreatedAt(LocalDateTime.now());
-            project.setCreatedBy(users.get(faker.random().nextInt(users.size())));
-            projectRepository.save(project);
+
+            // Sélectionner un utilisateur aléatoire comme créateur du projet
+            Users createdBy = users.get(faker.random().nextInt(users.size()));
+            project.setCreatedBy(createdBy);
+
+            // Sauvegarder le projet
+            Projects savedProject = projectRepository.save(project);
+
+            // Ajouter l'utilisateur en tant qu'ADMIN par défaut
+            ProjectRole projectRole = new ProjectRole(savedProject, createdBy, ProjectRole.Role.ADMIN);
+            projectRoleRepository.save(projectRole);
         }
 
         // Générer des tâches

@@ -35,12 +35,15 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
-    // Créer ou mettre à jour une tâche
+    // Créer une tâche
     @PostMapping
     public ResponseEntity<Task> saveTask(@RequestBody Task task) {
         Task savedTask = taskService.saveTask(task);
         return ResponseEntity.ok(savedTask);
     }
+
+    // Mettre à jour une tâche et créer un historique
+    
 
     // Supprimer une tâche par son ID
     @DeleteMapping("/{id}")

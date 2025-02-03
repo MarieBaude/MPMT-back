@@ -3,7 +3,6 @@ package com.example.MPMT.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 public class History {
