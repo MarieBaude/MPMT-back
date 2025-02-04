@@ -42,9 +42,6 @@ public class Task {
     @JoinColumn(name = "created_by", nullable = false)
     private Users createdBy;
 
-    // @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<History> updates;
-
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<History> updates;
