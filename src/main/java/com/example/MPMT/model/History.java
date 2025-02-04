@@ -22,10 +22,6 @@ public class History {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
 
-    // @ManyToOne
-    // @JoinColumn(name = "task_id", nullable = false)
-    // private Task task;
-
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
     @JsonBackReference
