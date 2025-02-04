@@ -28,12 +28,15 @@ public class TaskService {
         return taskRepository.findByProjectId(projectId);
     }
 
-    // Sauvegarder une tâche
+    // Créer une tâche
     public Task saveTask(Task task) {
         return taskRepository.save(task);
     }
 
-    // Supprimer une tâche par son ID
+    // Mettre à jour une tâche et créer un historique
+    
+
+    // Supprimer 
     public void deleteTaskById(Long id) {
         taskRepository.deleteById(id);
     }

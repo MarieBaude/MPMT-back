@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
-@RequestMapping("/tasks")
+@RequestMapping("/api/tasks")
 public class TaskController {
 
     @Autowired
@@ -23,9 +23,8 @@ public class TaskController {
 
     // Récupérer une tâche par son ID
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        Optional<Task> task = taskService.getTaskById(id);
-        return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public Optional<Task> getTaskById(@PathVariable Long id) {
+        return taskService.getTaskById(id);
     }
 
     // Récupérer toutes les tâches d'un projet

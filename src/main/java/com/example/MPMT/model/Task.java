@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Task {
 
@@ -40,7 +42,11 @@ public class Task {
     @JoinColumn(name = "created_by", nullable = false)
     private Users createdBy;
 
+    // @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<History> updates;
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<History> updates;
 
     // Getters and Setters

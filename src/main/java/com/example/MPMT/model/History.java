@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class History {
 
@@ -20,8 +22,13 @@ public class History {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
 
+    // @ManyToOne
+    // @JoinColumn(name = "task_id", nullable = false)
+    // private Task task;
+
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
+    @JsonBackReference
     private Task task;
 
     @ManyToOne
