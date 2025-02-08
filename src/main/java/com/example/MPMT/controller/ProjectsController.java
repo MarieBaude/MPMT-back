@@ -102,4 +102,11 @@ public class ProjectsController {
         return ResponseEntity.ok(project);
     }
 
+    // Récupérer les membres d'un projet
+    @GetMapping("/{projectId}/members")
+    public ResponseEntity<List<Users>> getProjectMembers(@PathVariable Long projectId) {
+        List<Users> members = projectService.getProjectMembers(projectId);
+        return ResponseEntity.ok(members);
+    }
+
 }
