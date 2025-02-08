@@ -1,9 +1,11 @@
 package com.example.MPMT.controller;
 
 import com.example.MPMT.dto.AllTaskFromOneProjectDTO;
+import com.example.MPMT.dto.TaskCreationDTO;
 import com.example.MPMT.model.Task;
 import com.example.MPMT.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +32,6 @@ public class TaskController {
     }
 
     // Récupérer toutes les tâches d'un projet
-    // @GetMapping("/project/{projectId}")
-    // public ResponseEntity<List<Task>> getTasksByProjectId(@PathVariable Long
-    // projectId) {
-    // List<Task> tasks = taskService.getTasksByProjectId(projectId);
-    // return ResponseEntity.ok(tasks);
-    // }
     @GetMapping("/project/{projectId}")
     public ResponseEntity<List<AllTaskFromOneProjectDTO>> getTasksByProjectId(@PathVariable Long projectId) {
         List<Task> tasks = taskService.getTasksByProjectId(projectId);
@@ -69,9 +65,13 @@ public class TaskController {
 
     // Créer une tâche
     @PostMapping
-    public ResponseEntity<Task> saveTask(@RequestBody Task task) {
-        Task savedTask = taskService.saveTask(task);
-        return ResponseEntity.ok(savedTask);
+    public ResponseEntity<?> saveTask(@RequestBody TaskCreationDTO taskDTO) {
+        try {
+            Task savedTask = taskService.saveTask(taskDTO);
+            return ResponseEntity.ok(savedTask);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // Mettre à jour une tâche et créer un historique

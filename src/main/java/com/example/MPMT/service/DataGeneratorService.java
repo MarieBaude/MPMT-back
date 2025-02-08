@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class DataGeneratorService {
@@ -84,9 +85,29 @@ public class DataGeneratorService {
             task.setStatus(Task.Status.values()[faker.random().nextInt(Task.Status.values().length)]);
             task.setEndDate(faker.date().future(30, TimeUnit.DAYS));
             task.setCreatedAt(new Date());
-            task.setProjects(projects.get(faker.random().nextInt(projects.size())));
-            task.setAssignee(users.get(faker.random().nextInt(users.size())));
-            task.setCreatedBy(users.get(faker.random().nextInt(users.size())));
+
+            // Sélectionner un projet aléatoire
+            Projects project = projects.get(faker.random().nextInt(projects.size()));
+            task.setProjects(project);
+
+            // Récupérer les membres du projet
+            List<ProjectRole> projectRoles = projectRoleRepository.findByProject(project);
+            List<Users> projectMembers = projectRoles.stream()
+                .map(ProjectRole::getUser)
+                .collect(Collectors.toList());
+
+            // Assigner un membre du projet à la tâche
+            if (!projectMembers.isEmpty()) {
+                Users assignee = projectMembers.get(faker.random().nextInt(projectMembers.size()));
+                task.setAssignee(assignee);
+            }
+
+            // Sélectionner un créateur parmi les membres du projet
+            if (!projectMembers.isEmpty()) {
+                Users createdBy = projectMembers.get(faker.random().nextInt(projectMembers.size()));
+                task.setCreatedBy(createdBy);
+            }
+
             taskRepository.save(task);
         }
 
@@ -116,5 +137,4 @@ public class DataGeneratorService {
             historyRepository.save(history);
         }
     }
-
 }
