@@ -59,17 +59,18 @@ public class ProjectsService {
         // Récupérer le projet
         Projects project = projectsRepository.findById(dto.getProjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Projet non trouvé avec l'ID : " + dto.getProjectId()));
-    
+
         // Récupérer l'utilisateur
         Users user = usersRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé avec l'ID : " + dto.getUserId()));
-    
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Utilisateur non trouvé avec l'ID : " + dto.getUserId()));
+
         // Vérifier que l'utilisateur fait déjà partie du projet
         ProjectRole existingRole = projectRoleRepository.findByProjectAndUser(project, user);
         if (existingRole == null) {
             throw new IllegalStateException("L'utilisateur n'est pas assigné au projet.");
         }
-    
+
         // Valider le rôle et le mettre à jour
         try {
             ProjectRole.Role roleType = ProjectRole.Role.valueOf(dto.getRole().toUpperCase());
@@ -78,8 +79,8 @@ public class ProjectsService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Rôle invalide : " + dto.getRole());
         }
-    }    
-    
+    }
+
     // Obtenir tous les projets d'un utilisateur
     public List<GetAllProjectsFromUserDTO> getProjectsByUserId(Long userId) {
         Users user = usersRepository.findById(userId)
