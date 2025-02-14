@@ -2,7 +2,9 @@ package com.example.MPMT.controller;
 
 import com.example.MPMT.dto.AllTaskFromOneProjectDTO;
 import com.example.MPMT.dto.TaskCreationDTO;
+import com.example.MPMT.dto.TaskUpdateDTO;
 import com.example.MPMT.model.Task;
+import com.example.MPMT.model.Users;
 import com.example.MPMT.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,6 +77,14 @@ public class TaskController {
     }
 
     // Mettre à jour une tâche et créer un historique
+    @PatchMapping("/{id}")
+    public ResponseEntity<Task> updateTask(
+            @PathVariable Long id,
+            @RequestBody TaskUpdateDTO taskDTO,
+            @RequestParam Long userId) {
+        Task updatedTask = taskService.updateTask(id, taskDTO, userId);
+        return ResponseEntity.ok(updatedTask);
+    }
 
     // Supprimer une tâche par son ID
     @DeleteMapping("/{id}")
