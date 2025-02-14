@@ -151,10 +151,7 @@ public class ProjectsService {
         Projects project = projectsRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé avec l'ID : " + projectId));
 
-        // Récupérer les membres avec les rôles ADMIN ou MEMBER
-        List<ProjectRole> projectRoles = projectRoleRepository.findByProjectAndRoleIn(
-                project,
-                List.of(ProjectRole.Role.ADMIN, ProjectRole.Role.MEMBER));
+        List<ProjectRole> projectRoles = projectRoleRepository.findByProject(project);
 
         // Extraire les utilisateurs
         return projectRoles.stream()
