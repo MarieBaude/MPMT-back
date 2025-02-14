@@ -1,5 +1,6 @@
 package com.example.MPMT.controller;
 
+import com.example.MPMT.dto.HistoryDTO;
 import com.example.MPMT.model.History;
 import com.example.MPMT.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class HistoryController {
 
     // Récupérer tous les historiques d'une tâche
     @GetMapping("/task/{taskId}")
-    public ResponseEntity<List<History>> getHistoriesByTaskId(@PathVariable Long taskId) {
-        List<History> histories = historyService.getHistoriesByTaskId(taskId);
+    public ResponseEntity<List<HistoryDTO>> getTaskHistory(@PathVariable Long taskId) {
+        List<HistoryDTO> histories = historyService.getHistoriesByTaskId(taskId);
         return ResponseEntity.ok(histories);
     }
 
