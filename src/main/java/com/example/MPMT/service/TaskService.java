@@ -41,6 +41,9 @@ public class TaskService {
     @Autowired
     private HistoryRepository historyRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
@@ -57,7 +60,6 @@ public class TaskService {
 
     // Créer une tâche
     public Task saveTask(TaskCreationDTO taskDTO) {
-        // Charger les entités associées à partir des IDs
         Projects project = projectsRepository.findById(taskDTO.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé avec l'ID : " + taskDTO.getProjectId()));
 
@@ -138,13 +140,18 @@ public class TaskService {
             task.setEndDate(taskDTO.getEndDate());
         }
     
+        // Vérifier si l'assigné a changé
+        Users newAssignee = null;
         if (taskDTO.getAssigneeId() != null) {
-            Users newAssignee = usersRepository.findById(taskDTO.getAssigneeId())
+            newAssignee = usersRepository.findById(taskDTO.getAssigneeId())
                     .orElseThrow(() -> new RuntimeException("Utilisateur assigné non trouvé avec l'ID : " + taskDTO.getAssigneeId()));
     
             if (!newAssignee.equals(task.getAssignee())) {
                 changes.put("assignee", task.getAssignee() != null ? task.getAssignee().getId().toString() : "null");
                 task.setAssignee(newAssignee);
+                String subject = "Vous avez été assigné à une nouvelle tâche";
+                String text = "Vous avez été assigné à la tâche : " + task.getName() + ", dans le projet : " + task.getProjects().getName();
+                emailService.sendEmail(newAssignee.getEmail(), subject, text);
             }
         }
     
@@ -162,6 +169,13 @@ public class TaskService {
             history.setUsers(currentUser); // Utilisateur qui a effectué la modification
     
             historyRepository.save(history);
+        }
+    
+        // Envoyer un e-mail si l'assigné a changé
+        if (newAssignee != null && !newAssignee.equals(task.getAssignee())) {
+            String subject = "Vous avez été assigné à une nouvelle tâche";
+            String text = "Vous avez été assigné à la tâche : " + task.getName() + " dans le projet : " + task.getProjects().getName();
+            emailService.sendEmail(newAssignee.getEmail(), subject, text);
         }
     
         return updatedTask;
