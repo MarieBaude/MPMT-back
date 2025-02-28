@@ -41,6 +41,9 @@ public class TaskService {
     @Autowired
     private HistoryRepository historyRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
@@ -57,7 +60,6 @@ public class TaskService {
 
     // Créer une tâche
     public Task saveTask(TaskCreationDTO taskDTO) {
-        // Charger les entités associées à partir des IDs
         Projects project = projectsRepository.findById(taskDTO.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé avec l'ID : " + taskDTO.getProjectId()));
 
@@ -90,7 +92,18 @@ public class TaskService {
         task.setCreatedBy(createdBy);
 
         // Sauvegarder la tâche
-        return taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
+
+        // Envoyer un e-mail à l'assigné si un assigné est défini
+        if (assignee != null) {
+            String subject = "Vous avez été assigné à une nouvelle tâche";
+            String text = "Vous avez été assigné à la tâche : " + task.getName() +
+                    " dans le projet : " + project.getName() +
+                    ". Date d'échéance : " + task.getEndDate();
+            emailService.sendEmail(assignee.getEmail(), subject, text);
+        }
+
+        return savedTask;
     }
 
     // Mettre à jour une tâche et créer un historique
@@ -98,59 +111,66 @@ public class TaskService {
         // Récupérer la tâche existante
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Tâche non trouvée avec l'ID : " + taskId));
-    
+
         // Récupérer l'utilisateur qui effectue la modification
         Users currentUser = usersRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l'ID : " + userId));
-    
+
         // Vérifier le rôle de l'utilisateur dans le projet
         ProjectRole projectRole = projectRoleRepository.findByProjectAndUser(task.getProjects(), currentUser);
         if (projectRole == null || projectRole.getRole() == ProjectRole.Role.OBSERVER) {
             throw new RuntimeException("L'utilisateur n'a pas les permissions nécessaires pour modifier la tâche.");
         }
-    
+
         // Enregistrer les anciennes valeurs
         Map<String, String> changes = new HashMap<>();
-    
+
         // Mettre à jour uniquement les champs fournis
         if (taskDTO.getName() != null && !taskDTO.getName().equals(task.getName())) {
             changes.put("name", task.getName()); // Ancienne valeur
             task.setName(taskDTO.getName()); // Nouvelle valeur
         }
-    
+
         if (taskDTO.getDescription() != null && !taskDTO.getDescription().equals(task.getDescription())) {
             changes.put("description", task.getDescription());
             task.setDescription(taskDTO.getDescription());
         }
-    
+
         if (taskDTO.getPriority() != null && !taskDTO.getPriority().equals(task.getPriority().name())) {
             changes.put("priority", task.getPriority().name());
             task.setPriority(Task.Priority.valueOf(taskDTO.getPriority()));
         }
-    
+
         if (taskDTO.getStatus() != null && !taskDTO.getStatus().equals(task.getStatus().name())) {
             changes.put("status", task.getStatus().name());
             task.setStatus(Task.Status.valueOf(taskDTO.getStatus()));
         }
-    
+
         if (taskDTO.getEndDate() != null && !taskDTO.getEndDate().equals(task.getEndDate())) {
             changes.put("endDate", task.getEndDate().toString());
             task.setEndDate(taskDTO.getEndDate());
         }
-    
+
+        // Vérifier si l'assigné a changé
+        Users newAssignee = null;
         if (taskDTO.getAssigneeId() != null) {
-            Users newAssignee = usersRepository.findById(taskDTO.getAssigneeId())
-                    .orElseThrow(() -> new RuntimeException("Utilisateur assigné non trouvé avec l'ID : " + taskDTO.getAssigneeId()));
-    
+            newAssignee = usersRepository.findById(taskDTO.getAssigneeId())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Utilisateur assigné non trouvé avec l'ID : " + taskDTO.getAssigneeId()));
+
             if (!newAssignee.equals(task.getAssignee())) {
                 changes.put("assignee", task.getAssignee() != null ? task.getAssignee().getId().toString() : "null");
                 task.setAssignee(newAssignee);
+                String subject = "Vous avez été assigné à une nouvelle tâche";
+                String text = "Vous avez été assigné à la tâche : " + task.getName() + ", dans le projet : "
+                        + task.getProjects().getName();
+                emailService.sendEmail(newAssignee.getEmail(), subject, text);
             }
         }
-    
+
         // Sauvegarder la tâche mise à jour
         Task updatedTask = taskRepository.save(task);
-    
+
         // Enregistrer les changements dans l'historique
         for (Map.Entry<String, String> entry : changes.entrySet()) {
             History history = new History();
@@ -160,10 +180,18 @@ public class TaskService {
             history.setUpdatedAt(LocalDateTime.now());
             history.setTask(updatedTask);
             history.setUsers(currentUser); // Utilisateur qui a effectué la modification
-    
+
             historyRepository.save(history);
         }
-    
+
+        // Envoyer un e-mail si l'assigné a changé
+        if (newAssignee != null && !newAssignee.equals(task.getAssignee())) {
+            String subject = "Vous avez été assigné à une nouvelle tâche";
+            String text = "Vous avez été assigné à la tâche : " + task.getName() + " dans le projet : "
+                    + task.getProjects().getName();
+            emailService.sendEmail(newAssignee.getEmail(), subject, text);
+        }
+
         return updatedTask;
     }
 
