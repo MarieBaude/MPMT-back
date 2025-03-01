@@ -12,6 +12,18 @@ public class TaskCreationDTO {
     private Long assigneeId;
     private Long createdById;
 
+    public TaskCreationDTO(String name, String description, String priority, String status,
+            Date endDate, Long projectId, Long assigneeId, Long createdById) {
+        this.name = name;
+        this.description = description;
+        this.priority = priority;
+        this.status = status;
+        this.endDate = endDate;
+        this.projectId = projectId;
+        this.assigneeId = assigneeId;
+        this.createdById = createdById;
+    }
+
     // Getters and Setters
 
     public String getName() {

@@ -26,26 +26,22 @@ import java.util.Optional;
 @Service
 public class TaskService {
 
-    @Autowired
     private final TaskRepository taskRepository;
+    private final ProjectsRepository projectsRepository;
+    private final UsersRepository usersRepository;
+    private final ProjectRoleRepository projectRoleRepository;
+    private final HistoryRepository historyRepository;
+    private final EmailService emailService;
 
-    @Autowired
-    private ProjectsRepository projectsRepository;
-
-    @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
-    private ProjectRoleRepository projectRoleRepository;
-
-    @Autowired
-    private HistoryRepository historyRepository;
-
-    @Autowired
-    private EmailService emailService;
-
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, ProjectsRepository projectsRepository,
+            UsersRepository usersRepository, ProjectRoleRepository projectRoleRepository,
+            HistoryRepository historyRepository, EmailService emailService) {
         this.taskRepository = taskRepository;
+        this.projectsRepository = projectsRepository;
+        this.usersRepository = usersRepository;
+        this.projectRoleRepository = projectRoleRepository;
+        this.historyRepository = historyRepository;
+        this.emailService = emailService;
     }
 
     // Récupérer une tâche par son ID

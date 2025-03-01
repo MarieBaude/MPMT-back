@@ -47,6 +47,23 @@ public class Task {
     @JsonManagedReference
     private List<History> updates;
 
+    // Constructeurs
+    public Task() {
+    }
+
+    public Task(String name, String description, Priority priority, Status status, Date endDate, Projects project,
+            Users assignee, Users createdBy, Date createdAt) {
+        this.name = name;
+        this.description = description;
+        this.priority = priority;
+        this.status = status;
+        this.endDate = endDate;
+        this.project = project;
+        this.assignee = assignee;
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+    }
+
     // Getters and Setters
 
     public Long getId() {

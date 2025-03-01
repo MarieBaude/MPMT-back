@@ -1,6 +1,6 @@
 package com.example.MPMT.dto;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class TaskUpdateDTO {
     private String name;
@@ -8,8 +8,16 @@ public class TaskUpdateDTO {
     private String priority;
     private String status;
     private Date endDate;
-
     private Long assigneeId;
+
+    public TaskUpdateDTO(String name, String description, String priority, String status, Date endDate, Long assigneeId) {
+        this.name = name;
+        this.description = description;
+        this.priority = priority;
+        this.status = status;
+        this.endDate = endDate;
+        this.assigneeId = assigneeId;
+    }
 
     // Getters et Setters
     public String getName() {
