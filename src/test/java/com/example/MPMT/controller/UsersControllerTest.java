@@ -1,94 +1,110 @@
-// package com.example.MPMT.controller;
+package com.example.MPMT.controller;
 
-// import com.example.MPMT.model.Users;
-// import com.example.MPMT.service.UsersService;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.Mockito;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-// import org.springframework.http.MediaType;
-// import org.springframework.test.context.bean.override.mockito.MockitoBean;
-// import org.springframework.test.web.servlet.MockMvc;
+import com.example.MPMT.model.Users;
+import com.example.MPMT.service.UsersService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-// import java.util.Arrays;
-// import java.util.Optional;
+import java.util.Collections;
+import java.util.Optional;
 
-// import static org.mockito.Mockito.when;
-// import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-// import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-// @WebMvcTest(UsersController.class)
-// class UsersControllerTest {
+class UsersControllerTest {
 
-//     @Autowired
-//     private MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-//     @MockitoBean
-//     private UsersService usersService;
+    @Mock
+    private UsersService usersService;
 
-//     @Test
-//     void testGetAllUsers() throws Exception {
-//         // Mock service response
-//         Users user1 = new Users(1L, "John Doe", "password123", "john@example.com");
-//         Users user2 = new Users(1L, "Jane Doe", "password456", "jane@example.com");
-//         when(usersService.findAll()).thenReturn(Arrays.asList(user1, user2));
+    @InjectMocks
+    private UsersController usersController;
 
-//         // Perform GET request
-//         mockMvc.perform(get("/api/users"))
-//                 .andExpect(status().isOk())
-//                 .andExpect(jsonPath("$.size()").value(2))
-//                 .andExpect(jsonPath("$[0].username").value("John Doe"))
-//                 .andExpect(jsonPath("$[1].email").value("jane@example.com"));
-//     }
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this); // Initialisation des mocks
+        mockMvc = MockMvcBuilders.standaloneSetup(usersController).build(); // Configuration de MockMvc
+    }
 
-//     @Test
-//     void testGetUserById() throws Exception {
-//         // Mock service response
-//         Users user = new Users(1L, "John Doe", "password123", "john@example.com");
-//         when(usersService.getUsersById(1L)).thenReturn(Optional.of(user));
+    @Test
+    void testGetAllUsers() throws Exception {
+        Users user = new Users();
+        user.setId(1L);
+        user.setUsername("testuser");
 
-//         // Perform GET request
-//         mockMvc.perform(get("/api/users/1"))
-//                 .andExpect(status().isOk())
-//                 .andExpect(jsonPath("$.username").value("John Doe"))
-//                 .andExpect(jsonPath("$.email").value("john@example.com"));
-//     }
+        when(usersService.findAll()).thenReturn(Collections.singletonList(user));
 
-//     @Test
-//     void testGetUserByMail_Found() throws Exception {
-//         // Mock service response
-//         Users user = new Users(1L, "John Doe", "password123", "john@example.com");
-//         when(usersService.getUserByMail("john@example.com")).thenReturn(Optional.of(user));
+        mockMvc.perform(get("/api/users")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].username").value("testuser"));
+    }
 
-//         // Perform GET request
-//         mockMvc.perform(get("/api/users/email/john@example.com"))
-//                 .andExpect(status().isOk())
-//                 .andExpect(jsonPath("$.username").value("John Doe"))
-//                 .andExpect(jsonPath("$.email").value("john@example.com"));
-//     }
+    @Test
+    void testGetUsersById() throws Exception {
+        Users user = new Users();
+        user.setId(1L);
+        user.setUsername("testuser");
 
-//     @Test
-//     void testGetUserByMail_NotFound() throws Exception {
-//         // Mock service response
-//         when(usersService.getUserByMail("unknown@example.com")).thenReturn(Optional.empty());
+        when(usersService.getUsersById(1L)).thenReturn(Optional.of(user));
 
-//         // Perform GET request
-//         mockMvc.perform(get("/api/users/email/unknown@example.com"))
-//                 .andExpect(status().isNotFound());
-//     }
+        mockMvc.perform(get("/api/users/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.username").value("testuser"));
+    }
 
-//     @Test
-//     void testCreateUser() throws Exception {
-//         // Mock service response
-//         Users user = new Users(1L, "John Doe", "password123", "john@example.com");
-//         when(usersService.saveUser(Mockito.any(Users.class))).thenReturn(user);
 
-//         // Perform POST request
-//         mockMvc.perform(post("/api/users")
-//                         .contentType(MediaType.APPLICATION_JSON)
-//                         .content("{\"username\": \"John Doe\", \"email\": \"john@example.com\"}"))
-//                 .andExpect(status().isCreated())
-//                 .andExpect(jsonPath("$.username").value("John Doe"))
-//                 .andExpect(jsonPath("$.email").value("john@example.com"));
-//     }
-// }
+    @Test
+    void testGetUserByMail() throws Exception {
+        Users user = new Users();
+        user.setId(1L);
+        user.setEmail("test@example.com");
+
+        when(usersService.getUserByMail("test@example.com")).thenReturn(Optional.of(user));
+
+        mockMvc.perform(get("/api/users/email/test@example.com")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.email").value("test@example.com"));
+    }
+
+    @Test
+    void testGetUserByMailNotFound() throws Exception {
+        when(usersService.getUserByMail("test@example.com")).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/users/email/test@example.com")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testCreateUser() throws Exception {
+        Users user = new Users();
+        user.setId(1L);
+        user.setUsername("testuser");
+        user.setEmail("test@example.com");
+
+        when(usersService.saveUser(any(Users.class))).thenReturn(user);
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\":\"testuser\",\"email\":\"test@example.com\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.username").value("testuser"))
+                .andExpect(jsonPath("$.email").value("test@example.com"));
+    }
+}

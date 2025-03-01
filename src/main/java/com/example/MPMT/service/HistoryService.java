@@ -1,6 +1,5 @@
 package com.example.MPMT.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.MPMT.repository.HistoryRepository;
 import com.example.MPMT.repository.UsersRepository;
@@ -14,13 +13,11 @@ import java.util.stream.Collectors;
 @Service
 public class HistoryService {
 
-    @Autowired
     private UsersRepository usersRepository;
-
-    @Autowired
     private final HistoryRepository historyRepository;
 
-    public HistoryService(HistoryRepository historyRepository) {
+    public HistoryService(UsersRepository usersRepository, HistoryRepository historyRepository) {
+        this.usersRepository = usersRepository;
         this.historyRepository = historyRepository;
     }
 

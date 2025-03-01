@@ -5,6 +5,9 @@ public class AssignRoleDTO {
     private Long userId;
     private String role;
 
+    public AssignRoleDTO() {
+    }
+
     public AssignRoleDTO(Long projectId, Long userId, String role) {
         this.projectId = projectId;
         this.userId = userId;

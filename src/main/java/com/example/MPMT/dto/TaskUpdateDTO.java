@@ -10,6 +10,9 @@ public class TaskUpdateDTO {
     private Date endDate;
     private Long assigneeId;
 
+    public TaskUpdateDTO() {
+    }
+
     public TaskUpdateDTO(String name, String description, String priority, String status, Date endDate, Long assigneeId) {
         this.name = name;
         this.description = description;

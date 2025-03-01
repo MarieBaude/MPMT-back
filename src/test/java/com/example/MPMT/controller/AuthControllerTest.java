@@ -1,90 +1,78 @@
-// package com.example.MPMT.controller;
+package com.example.MPMT.controller;
 
-// import com.example.MPMT.model.Users;
-// import com.example.MPMT.service.AuthService;
+import com.example.MPMT.dto.LoginDTO;
+import com.example.MPMT.model.Users;
+import com.example.MPMT.service.AuthService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.InjectMocks;
-// import org.mockito.Mock;
-// import org.mockito.Mockito;
-// import org.mockito.MockitoAnnotations;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-// import org.springframework.http.MediaType;
-// import org.springframework.test.context.bean.override.mockito.MockitoBean;
-// import org.springframework.test.web.servlet.MockMvc;
+import java.util.Optional;
 
-// import org.springframework.boot.test.mock.mockito.MockBean; // Pour @MockBean
-// import org.mockito.Mock; // Pour @Mock
-// import org.mockito.InjectMocks; // Pour @InjectMocks
-// import org.mockito.MockitoAnnotations; // Pour MockitoAnnotations.openMocks(this)
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-// import java.util.Optional;
+class AuthControllerTest {
 
-// import static org.mockito.Mockito.when;
-// import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-// import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+    private MockMvc mockMvc;
 
-// @WebMvcTest(AuthController.class)
-// public class AuthControllerTest {
+    @Mock
+    private AuthService authService;
 
-// @Autowired
-//     private MockMvc mockMvc;
+    @InjectMocks
+    private AuthController authController;
 
-//     @Mock
-//     private AuthService authService; // Mock de Mockito
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this); // Initialisation des mocks
+        mockMvc = MockMvcBuilders.standaloneSetup(authController).build(); // Configuration de MockMvc
+    }
 
-//     @InjectMocks
-//     private AuthController authController; // Injection du mock
+    @Test
+    void testLoginSuccess() throws Exception {
+        Users user = new Users();
+        user.setEmail("test@example.com");
+        user.setPassword("password123");
 
-//     @BeforeEach
-//     void setUp() {
-//         MockitoAnnotations.openMocks(this); // Initialisation des mocks
-//     }
+        when(authService.authenticate(anyString(), anyString())).thenReturn(Optional.of(user));
 
-//     @Test
-//     void login_ShouldReturnUser_WhenCredentialsAreValid() throws Exception {
-//         // Configuration du mock
-//         Users user = new Users(1L, "JohnDoe", "password123", "john@example.com");
-//         when(authService.authenticate("john@example.com", "password123"))
-//                 .thenReturn(Optional.of(user));
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setEmail("test@example.com");
+        loginDTO.setPassword("password123");
 
-//         // Exécution de la requête et assertions
-//         mockMvc.perform(post("/api/login")
-//                 .contentType(MediaType.APPLICATION_JSON)
-//                 .content("{\"email\":\"john@example.com\",\"password\":\"password123\"}"))
-//             .andExpect(status().isOk())
-//             .andExpect(jsonPath("$.id").value(1))
-//             .andExpect(jsonPath("$.username").value("JohnDoe"))
-//             .andExpect(jsonPath("$.email").value("john@example.com"));
-//     }
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"test@example.com\",\"password\":\"password123\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("test@example.com"));
+    }
 
-//     @Test
-//     void login_ShouldReturnUnauthorized_WhenCredentialsAreInvalid() throws Exception {
-//         // Mock du service
-//         when(authService.authenticate("john@example.com", "wrongpassword"))
-//                 .thenReturn(Optional.empty());
+    @Test
+    void testLoginInvalidCredentials() throws Exception {
+        when(authService.authenticate(anyString(), anyString())).thenReturn(Optional.empty());
 
-//         // Requête et assertions
-//         mockMvc.perform(post("/api/login")
-//                 .contentType(MediaType.APPLICATION_JSON)
-//                 .content("{\"email\":\"john@example.com\",\"password\":\"wrongpassword\"}"))
-//             .andExpect(status().isUnauthorized())
-//             .andExpect(content().string("Invalid credentials"));
-//     }
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"test@example.com\",\"password\":\"wrongpassword\"}"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("Invalid credentials"));
+    }
 
-//     @Test
-//     void login_ShouldReturnInternalServerError_WhenServiceThrowsException() throws Exception {
-//         // Mock du service
-//         when(authService.authenticate(Mockito.anyString(), Mockito.anyString()))
-//                 .thenThrow(new RuntimeException("Service error"));
+    @Test
+    void testLoginInternalServerError() throws Exception {
+        when(authService.authenticate(anyString(), anyString())).thenThrow(new RuntimeException("Database error"));
 
-//         // Requête et assertions
-//         mockMvc.perform(post("/api/login")
-//                 .contentType(MediaType.APPLICATION_JSON)
-//                 .content("{\"email\":\"john@example.com\",\"password\":\"password123\"}"))
-//             .andExpect(status().isInternalServerError())
-//             .andExpect(content().string("An error occurred"));
-//     }
-// }
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"test@example.com\",\"password\":\"password123\"}"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("An error occurred"));
+    }
+}

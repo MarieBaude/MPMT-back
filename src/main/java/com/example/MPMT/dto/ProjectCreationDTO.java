@@ -8,6 +8,9 @@ public class ProjectCreationDTO {
     private String description;
     private LocalDateTime createdAt;
 
+    public ProjectCreationDTO() {
+    }
+
     public ProjectCreationDTO(String name, String description, LocalDateTime createdAt, Long createdById) {
         this.name = name;
         this.description = description;

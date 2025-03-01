@@ -12,6 +12,9 @@ public class TaskCreationDTO {
     private Long assigneeId;
     private Long createdById;
 
+    public TaskCreationDTO() {
+    }
+
     public TaskCreationDTO(String name, String description, String priority, String status,
             Date endDate, Long projectId, Long assigneeId, Long createdById) {
         this.name = name;

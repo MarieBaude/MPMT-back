@@ -3,7 +3,6 @@ package com.example.MPMT.service;
 import com.github.javafaker.Faker;
 import com.example.MPMT.model.*;
 import com.example.MPMT.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,22 +15,22 @@ import java.util.stream.Collectors;
 @Service
 public class DataGeneratorService {
 
-    @Autowired
-    private UsersRepository userRepository;
-
-    @Autowired
-    private ProjectsRepository projectRepository;
-
-    @Autowired
-    private ProjectRoleRepository projectRoleRepository;
-
-    @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
-    private HistoryRepository historyRepository;
-
+    private final UsersRepository userRepository;
+    private final ProjectsRepository projectRepository;
+    private final ProjectRoleRepository projectRoleRepository;
+    private final TaskRepository taskRepository;
+    private final HistoryRepository historyRepository;
     private final Faker faker = new Faker(new Locale("fr"));
+
+    public DataGeneratorService(UsersRepository userRepository, ProjectsRepository projectRepository,
+            ProjectRoleRepository projectRoleRepository, TaskRepository taskRepository,
+            HistoryRepository historyRepository) {
+        this.userRepository = userRepository;
+        this.projectRepository = projectRepository;
+        this.projectRoleRepository = projectRoleRepository;
+        this.taskRepository = taskRepository;
+        this.historyRepository = historyRepository;
+    }
 
     // Générer un username
     private String generateUsername() {
@@ -93,8 +92,8 @@ public class DataGeneratorService {
             // Récupérer les membres du projet
             List<ProjectRole> projectRoles = projectRoleRepository.findByProject(project);
             List<Users> projectMembers = projectRoles.stream()
-                .map(ProjectRole::getUser)
-                .collect(Collectors.toList());
+                    .map(ProjectRole::getUser)
+                    .collect(Collectors.toList());
 
             // Assigner un membre du projet à la tâche
             if (!projectMembers.isEmpty()) {

@@ -4,7 +4,6 @@ import com.example.MPMT.dto.AllTaskFromOneProjectDTO;
 import com.example.MPMT.dto.TaskCreationDTO;
 import com.example.MPMT.dto.TaskUpdateDTO;
 import com.example.MPMT.model.Task;
-import com.example.MPMT.model.Users;
 import com.example.MPMT.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
