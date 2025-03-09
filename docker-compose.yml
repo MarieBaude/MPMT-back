@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: mariebaude 
+      POSTGRES_PASSWORD: )9P7ni?_g67UeN  
+      POSTGRES_DB: mpmt  
+    ports:
+      - "7432:5432"  
+    networks:
+      - backend_network
+      
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    ports:
+      - "8080:8080"
+    networks:
+      - backend_network  
+    depends_on:
+      - db
+    
+
+  frontend:
+    build:
+      context: ../front-end  
+      dockerfile: Dockerfile  
+    ports:
+      - "80:80" 
+    depends_on:
+      - backend  
+
+networks:
+  backend_network:
+    driver: bridge

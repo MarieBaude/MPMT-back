@@ -1,27 +1,53 @@
-# MTMP
+# Project Management Tool (MPMT) - Backend
 
-Ce projet permet d'envoyer des e-mails en utilisant Spring Boot et un serveur SMTP externe (comme Gmail).
+## Table des matières
+- [Description du projet](#description-du-projet)
+- [Technologies utilisées](#technologies-utilisées)
+- [Prérequis](#prérequis)
+- [Installation et configuration](#installation-et-configuration)
 
-## Configuration
+---
 
-1. **Cloner le projet** :
+## Description du projet
+Cette API spring boot couvre la gestion des utilisateurs, des projets, des tâches, des rôles et des notifications par mail. Ce backend est conçu pour être utilisé avec le frontend Angular.
 
-`git clone https://github.com/votre-utilisateur/votre-projet.git`
+---
 
-2. **Base de donnée** : 
-Créer une base de donnée postgresql de nom "mpmt".
+## Technologies utilisées
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white) ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
-Remplacer les valeurs :
-spring.datasource.username=
-spring.datasource.password=
+---
+
+## Prérequis
+- [Docker](https://www.docker.com/get-started)
+- Un boite mail GMAIL
+
+---
+
+## Installation et configuration
+
+1. **Récupéré les images** :
 
 
-3. **Démarrage** :
+2. **Configurer** :
+Avant le démarrage des containers :
+- Création du dossier target : 
 
-Premier démarrage pour créer les fausses donnée : 
+```bash
+mvn clean package -DskipTests
+```
 
-`mvn spring-boot:run -Dspring-boot.run.arguments="generate-data"`
+- Mettez à jour le fichier application.properties avec les informations de connexion à la base de données : 
+```bash
+spring.datasource.url=jdbc:postgresql://db:5432/NOM_DE_LA_BDD
+spring.datasource.username=USERNAME
+spring.datasource.password=PASSWORD
+```
 
-Lancement classique :
+- Mettre à jour à jour les informations pour les notifications par mail :
+```bash
+spring.mail.username=MAIL
+spring.mail.password=PASSWORD
+```
 
-`mvn spring-boot:run`
+2. **Configurer** :
