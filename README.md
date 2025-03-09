@@ -29,9 +29,8 @@ Cette API spring boot couvre la gestion des utilisateurs, des projets, des tâch
 1. **Récupéré les images** :
 
 
-2. **Configurer** :
-Avant le démarrage des containers :
-- Création du dossier target : 
+2. **Configurer la base de donnée** :
+- Avant le démarrage des containers créer le dossier target : 
 
 ```bash
 mvn clean package -DskipTests
@@ -44,10 +43,8 @@ spring.datasource.username=USERNAME
 spring.datasource.password=PASSWORD
 ```
 
-- Mettre à jour à jour les informations pour les notifications par mail :
+- Avec Gmail, créer un mot de passe d'application et mettre à jour à jour les informations pour les notifications par mail :
 ```bash
 spring.mail.username=MAIL
 spring.mail.password=PASSWORD
 ```
-
-2. **Configurer** :

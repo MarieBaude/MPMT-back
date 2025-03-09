@@ -21,7 +21,7 @@ public class EmailServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this); // Initialisation des mocks
+        MockitoAnnotations.openMocks(this); 
     }
 
     @Test
