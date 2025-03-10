@@ -1,0 +1,44 @@
+name: Backend CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Checkout du code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 2 : Configurer Java
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Étape 3 : Construire et tester le backend
+      - name: Build and test backend
+        run: |
+          ./mvnw clean package
+
+      # Étape 4 : Construire l'image Docker du backend
+      - name: Build Docker image
+        run: |
+          docker build -t mariebaude/mpmt_back:v1.0 .
+
+      # Étape 5 : Se connecter à Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: mariebaude
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # Étape 6 : Pousser l'image Docker sur Docker Hub
+      - name: Push Docker image
+        run: |
+          docker push mariebaude/mpmt_back:v1.0
