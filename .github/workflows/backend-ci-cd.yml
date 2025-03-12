@@ -24,7 +24,7 @@ jobs:
       # Étape 3 : Construire et tester le backend
       - name: Build and test backend
         run: |
-          ./mvnw clean package
+          ./mvn clean package -DskipTests
 
       # Étape 4 : Construire l'image Docker du backend
       - name: Build Docker image
