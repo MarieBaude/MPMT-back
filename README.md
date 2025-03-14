@@ -48,3 +48,9 @@ spring.datasource.password=PASSWORD
 spring.mail.username=MAIL
 spring.mail.password=PASSWORD
 ```
+
+---
+
+## Documentation
+
+Swagger est disponible à l'adresse : http://localhost:8080/swagger-ui/index.html
