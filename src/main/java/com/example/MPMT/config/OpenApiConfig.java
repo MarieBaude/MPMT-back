@@ -12,8 +12,8 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Titre de l'API")
+                        .title("API MPMT")
                         .version("1.0")
-                        .description("Description de l'API"));
+                        .description("API du projet MPMT pour ISCOD"));
     }
 }

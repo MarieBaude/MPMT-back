@@ -54,3 +54,4 @@ spring.mail.password=PASSWORD
 ## Documentation
 
 Swagger est disponible à l'adresse : http://localhost:8080/swagger-ui/index.html
+Si Swagger n'arrive pas à trouver URL de base lui renseigner : http://localhost:8080/api/v1/api-docs
