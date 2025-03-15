@@ -13,7 +13,7 @@ services:
       - backend_network
       
   backend:
-    image: mariebaude/mpmt_back
+    image: mariebaude/mpmt_back:v1.0
     environment:
       DATABASE_URL: jdbc:postgresql://db:5432/placeholder_db
       DATABASE_USERNAME: placeholder_username
@@ -29,9 +29,12 @@ services:
     
 
   frontend:
-    image : mariebaude/mpmt_front
+    # image : mariebaude/mpmt_front:v1.0
+    build:
+      context: ../front-end
+      dockerfile: Dockerfile
     ports:
-      - "80:80" 
+      - "7085:80" 
     depends_on:
       - backend  
 
