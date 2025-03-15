@@ -29,10 +29,7 @@ services:
     
 
   frontend:
-    # image : mariebaude/mpmt_front:v1.0
-    build:
-      context: ../front-end
-      dockerfile: Dockerfile
+    image : mariebaude/mpmt_front:v1.0
     ports:
       - "7085:80" 
     depends_on:
