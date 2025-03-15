@@ -21,30 +21,35 @@ Cette API spring boot couvre la gestion des utilisateurs, des projets, des tâch
 ## Prérequis
 - [Docker](https://www.docker.com/get-started)
 - Un boite mail GMAIL
+- Un IDE
 
 ---
 
 ## Installation et configuration
 
-1. **Récupéré les images** :
+1. **Récupéré le code** :
+- [Back-end](https://github.com/MarieBaude/MPMT-back)
+- [Front-end](https://github.com/MarieBaude/MPMT-front)
 
+2. **Configurer** :
+- Mettez à jour le fichier docker-compose:
 
-2. **Configurer la base de donnée** :
-- Avant le démarrage des containers créer le dossier target : 
-
+Champs à changer :
 ```bash
-mvn clean package -DskipTests
+GMAIL_USERNAME: mail@gmail.com
+GMAIL_PASSWORD: pw
 ```
 
-- Mettez à jour le fichier application.properties avec les informations de connexion à la base de données : 
+Optionellement vous pouvez changer les placeholder.
+
+3. **Lancer Docker**
+- Dans le dossier du back-end, exécuter la commande : 
 ```bash
-spring.datasource.url=jdbc:postgresql://db:5432/NOM_DE_LA_BDD
-spring.datasource.username=USERNAME
-spring.datasource.password=PASSWORD
+docker-compose down && docker-compose up --build
 ```
 
-- Avec Gmail, créer un mot de passe d'application et mettre à jour à jour les informations pour les notifications par mail :
-```bash
-spring.mail.username=MAIL
-spring.mail.password=PASSWORD
-```
+---
+
+## Documentation
+Swagger est disponible à l'adresse : http://localhost:8080/swagger-ui/index.html
+Si Swagger n'arrive pas à trouver URL de base lui renseigner : http://localhost:8080/api/v1/api-docs

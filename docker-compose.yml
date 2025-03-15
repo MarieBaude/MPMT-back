@@ -4,18 +4,22 @@ services:
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: mariebaude 
-      POSTGRES_PASSWORD: )9P7ni?_g67UeN  
-      POSTGRES_DB: mpmt  
+      POSTGRES_USER: placeholder_username
+      POSTGRES_PASSWORD: placeholder_password
+      POSTGRES_DB: placeholder_db
     ports:
       - "7432:5432"  
     networks:
       - backend_network
       
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile  
+    image: mariebaude/mpmt_back
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/placeholder_db
+      DATABASE_USERNAME: placeholder_username
+      DATABASE_PASSWORD: placeholder_password
+      GMAIL_USERNAME: 
+      GMAIL_PASSWORD: 
     ports:
       - "8080:8080"
     networks:
@@ -25,9 +29,7 @@ services:
     
 
   frontend:
-    build:
-      context: ../front-end  
-      dockerfile: Dockerfile  
+    image : mariebaude/mpmt_front
     ports:
       - "80:80" 
     depends_on:
