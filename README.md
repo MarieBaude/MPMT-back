@@ -48,6 +48,8 @@ Optionellement vous pouvez changer les placeholder.
 docker-compose down && docker-compose up --build
 ```
 
+Retrouver le site [ici](http://localhost:7085/)
+
 ---
 
 ## Documentation
