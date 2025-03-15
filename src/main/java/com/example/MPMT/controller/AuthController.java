@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api")
 public class AuthController {
 
